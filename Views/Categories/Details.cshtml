@@ -1,0 +1,81 @@
+@model CommUnityHub.Models.ServiceCategory
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">
+            @if (!string.IsNullOrEmpty(Model.IconClass))
+            {
+                <i class="bi @Model.IconClass text-primary me-2"></i>
+            }
+            @Model.Name
+        </h4>
+        <div>
+            @if (Model.IsActive)
+            {
+                <span class="badge bg-success">Active</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary">Inactive</span>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-text text-muted">@Model.Description</p>
+        <p class="small text-secondary mb-0">Display Order: @Model.DisplayOrder</p>
+    </div>
+    <div class="card-footer bg-white">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+        <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Back to Categories</a>
+    </div>
+</div>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    <h5>Services in this Category (@Model.ServiceListings.Count)</h5>
+    <a asp-controller="ServiceListings" asp-action="Create" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-plus"></i> Add Service to this Category
+    </a>
+</div>
+
+@if (!Model.ServiceListings.Any())
+{
+    <div class="alert alert-light border text-center text-muted py-4">
+        No service listings posted in this category yet.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        @foreach (var listing in Model.ServiceListings)
+        {
+            <div class="col">
+                <div class="card h-100 border">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="card-title fw-bold">@listing.Title</h6>
+                            <span class="badge bg-info text-dark">@listing.ExchangeType</span>
+                        </div>
+                        <p class="card-text text-muted small">@listing.Description</p>
+                        <p class="small text-secondary mb-1">
+                            <strong>Provider:</strong> @listing.ProviderName | <strong>Suburb:</strong> @listing.Suburb
+                        </p>
+                        @if (listing.DepositRequired)
+                        {
+                            <p class="small text-warning-emphasis mb-0">
+                                <strong>Estimated Cost/Deposit:</strong> $@listing.EstimatedCost.ToString("F2")
+                            </p>
+                        }
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Posted: @listing.CreatedAt.ToString("dd/MM/yyyy")</small>
+                        <a asp-controller="ServiceListings" asp-action="Details" asp-route-id="@listing.Id" class="btn btn-sm btn-outline-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

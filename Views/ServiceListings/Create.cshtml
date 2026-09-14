@@ -1,0 +1,126 @@
+@model CommUnityHub.Models.ServiceListing
+
+@{
+    ViewData["Title"] = "Post Service";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">Post a Community Service or Skill</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" id="listingForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId">
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ExchangeType" class="form-label"></label>
+                            <select asp-for="ExchangeType" class="form-select">
+                                <option value="Free Skill Swap">Free Skill Swap</option>
+                                <option value="Material Cost Covered">Material Cost Covered</option>
+                                <option value="Work / Task Exchange">Work / Task Exchange</option>
+                            </select>
+                            <span asp-validation-for="ExchangeType" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label"></label>
+                        <input asp-for="Title" class="form-control" placeholder="e.g. Lawn Mowing or Guitar Tutoring" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the skill you offer and what mutual help you are looking for in return"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ProviderName" class="form-label"></label>
+                            <input asp-for="ProviderName" class="form-control" placeholder="Your Name" />
+                            <span asp-validation-for="ProviderName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Suburb" class="form-label"></label>
+                            <input asp-for="Suburb" class="form-control" placeholder="e.g. Petone, Hutt Central" />
+                            <span asp-validation-for="Suburb" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ContactEmail" class="form-label"></label>
+                            <input asp-for="ContactEmail" class="form-control" type="email" placeholder="name@example.com" />
+                            <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ContactPhone" class="form-label"></label>
+                            <input asp-for="ContactPhone" class="form-control" placeholder="021-xxx-xxxx" />
+                            <span asp-validation-for="ContactPhone" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded border mb-3">
+                        <div class="form-check mb-2">
+                            <input asp-for="DepositRequired" class="form-check-input" id="depositCheckbox" />
+                            <label asp-for="DepositRequired" class="form-check-label fw-semibold">Require Trust Deposit or Material Cost?</label>
+                        </div>
+                        <div id="costContainer">
+                            <label asp-for="EstimatedCost" class="form-label small"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="EstimatedCost" class="form-control" id="costInput" type="number" step="0.01" min="0" max="1000" />
+                            </div>
+                            <span asp-validation-for="EstimatedCost" class="text-danger small"></span>
+                            <div class="form-text small">Enter the estimated material or commitment deposit amount.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="IsAvailable" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsAvailable" class="form-check-label">Listing is currently active and available</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Back to Listings</a>
+                        <button type="submit" class="btn btn-primary">Publish Service</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            function updateCostVisibility() {
+                if ($('#depositCheckbox').is(':checked')) {
+                    $('#costContainer').show();
+                    $('#costInput').prop('readonly', false);
+                } else {
+                    $('#costContainer').hide();
+                    $('#costInput').val('0.00');
+                }
+            }
+
+            $('#depositCheckbox').on('change', function () {
+                updateCostVisibility();
+            });
+
+            updateCostVisibility();
+        });
+    </script>
+}

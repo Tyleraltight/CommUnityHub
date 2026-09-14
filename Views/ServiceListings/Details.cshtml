@@ -1,0 +1,71 @@
+@model CommUnityHub.Models.ServiceListing
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <span class="badge bg-secondary">@Model.Category?.Name</span>
+                <div>
+                    <span class="badge bg-info text-dark me-1">@Model.ExchangeType</span>
+                    @if (Model.IsAvailable)
+                    {
+                        <span class="badge bg-success">Available</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Closed</span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title fw-bold">@Model.Title</h3>
+                <p class="text-muted small">Posted on @Model.CreatedAt.ToString("f")</p>
+                <hr />
+
+                <h5 class="fw-semibold">Description</h5>
+                <p class="card-text" style="white-space: pre-line;">@Model.Description</p>
+
+                @if (Model.DepositRequired)
+                {
+                    <div class="alert alert-warning d-flex align-items-center mt-3">
+                        <i class="bi bi-shield-check fs-4 me-3"></i>
+                        <div>
+                            <strong>Estimated Deposit / Material Cost: $@Model.EstimatedCost.ToString("F2")</strong>
+                            <div class="small">This listing requires a refundable trust deposit or hard material cost coverage upon agreement.</div>
+                        </div>
+                    </div>
+                }
+
+                <div class="card bg-light border-0 mt-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-person-lines-fill me-2"></i>Provider Contact Information</h6>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-3">Provider Name</dt>
+                            <dd class="col-sm-9">@Model.ProviderName</dd>
+
+                            <dt class="col-sm-3">Location / Suburb</dt>
+                            <dd class="col-sm-9">@Model.Suburb</dd>
+
+                            <dt class="col-sm-3">Email</dt>
+                            <dd class="col-sm-9"><a href="mailto:@Model.ContactEmail">@Model.ContactEmail</a></dd>
+
+                            <dt class="col-sm-3">Phone</dt>
+                            <dd class="col-sm-9"><a href="tel:@Model.ContactPhone">@Model.ContactPhone</a></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to Listings</a>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary me-2">Edit Listing</a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
