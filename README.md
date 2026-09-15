@@ -1,5 +1,3 @@
-# CommUnity Hub
-
 ## Project Description
 My system is a web-based community service and skill-sharing platform. It allows local residents to find, offer, and manage practical everyday services within their neighborhoods.
 
@@ -15,8 +13,8 @@ To provide a clean, easy-to-use local portal where residents can post their skil
 ## Advanced feature in my final project: Payment service
 
 ### Purpose
-* **Commitment Deposit:** When two members of the community agree to a skill swap or home-stay exchange, each person puts down a refundable commitment deposit. This helps avoid last minute cancelations and no-shows. Once both parties have confirmed the exchange has taken place the deposit is automatically returned to the user.
-* **Featured Listing Boost (Optional):** Members can pay a small fee to pin their skill offering or urgent exchange request to the top of the community board.
+* Commitment Deposit: When two members of the community agree to a skill swap or home-stay exchange, each person puts down a refundable commitment deposit. This helps avoid last minute cancelations and no-shows. Once both parties have confirmed the exchange has taken place the deposit is automatically returned to the user.
+* Featured Listing Boost (Optional): Members can pay a small fee to pin their skill offering or urgent exchange request to the top of the community board.
 
 ---
 
