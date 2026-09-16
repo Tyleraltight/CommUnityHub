@@ -1,6 +1,11 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using CommUnityHub.Data;
 using CommUnityHub.Repositories;
+
+var defaultCulture = new CultureInfo("en-NZ");
+CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
+CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 

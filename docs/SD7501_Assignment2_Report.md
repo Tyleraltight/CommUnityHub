@@ -3,6 +3,8 @@
 **Project Title:** CommUnity Hub: Hyperlocal Skill Sharing and Community Service Platform  
 **Course:** SD7501 Web Application Development  
 **Institution:** School of Innovation, Design and Technology, Whitireia and WelTec  
+**Student Name:** Yusen Xu (Tyler)  
+**Student ID:** 22503513  
 **Instructor:** Anjali de Silva  
 
 ---
