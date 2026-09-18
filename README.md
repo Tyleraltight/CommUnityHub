@@ -1,4 +1,4 @@
-#Web Application Development - Assignment 2 CommUnity Hub
+# WebApplication Development Assignment2 - Community Hub
 
 ## Project Description
 My system is a web-based community service and skill-sharing platform. It allows local residents to find, offer, and manage practical everyday services within their neighborhoods.
