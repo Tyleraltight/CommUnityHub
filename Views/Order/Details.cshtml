@@ -1,0 +1,168 @@
+@model CommUnityHub.Models.ViewModels.OrderVM
+
+@{
+    ViewData["Title"] = $"Order Details #{Model.OrderHeader.Id}";
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="OrderHeader.Id" hidden />
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0">
+                        <i class="bi bi-box-seam me-2"></i>Order & Shipment Details #@Model.OrderHeader.Id
+                    </h5>
+                </div>
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                    <a asp-action="Index" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                <!-- Customer & Fulfillment Information -->
+                <div class="col-lg-6 pb-4 border-end-lg">
+                    <h5 class="fw-bold mb-3 text-secondary border-bottom pb-2">
+                        <i class="bi bi-person-lines-fill me-2"></i>Customer & Shipment Information
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Customer Name</label>
+                            <input asp-for="OrderHeader.Name" class="form-control" />
+                            <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Phone Number</label>
+                            <input asp-for="OrderHeader.PhoneNumber" class="form-control" />
+                            <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">City</label>
+                            <input asp-for="OrderHeader.City" class="form-control" />
+                            <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Street Address</label>
+                            <input asp-for="OrderHeader.StreetAddress" class="form-control" />
+                            <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Suburb</label>
+                            <input asp-for="OrderHeader.Suburb" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Postal Code</label>
+                            <input asp-for="OrderHeader.PostalCode" class="form-control" />
+                        </div>
+
+                        <!-- Logistics & Shipment Fields -->
+                        <div class="col-12 pt-3 border-top">
+                            <h6 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-truck me-1"></i>Shipment & Logistics Carrier
+                            </h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Logistics Carrier</label>
+                            <input asp-for="OrderHeader.Carrier" class="form-control" placeholder="e.g. NZ Post / CourierPost" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Tracking Number</label>
+                            <input asp-for="OrderHeader.TrackingNumber" class="form-control" placeholder="e.g. NZP-12345678" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-muted">Shipping / Dispatch Date</label>
+                            <input value="@(Model.OrderHeader.ShippingDate?.ToString("yyyy-MM-dd HH:mm") ?? "Not Yet Dispatched")" class="form-control bg-light" readonly />
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" asp-action="UpdateOrderDetail" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-save me-1"></i>Update Contact & Shipping Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Status & Items Summary -->
+                <div class="col-lg-6 ps-lg-4">
+                    <h5 class="fw-bold mb-3 text-secondary border-bottom pb-2">
+                        <i class="bi bi-receipt me-2"></i>Order Status & Breakdown
+                    </h5>
+
+                    <div class="card bg-light border-0 p-3 mb-4">
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Order Date:</span>
+                            <span>@Model.OrderHeader.OrderDate.ToString("yyyy-MM-dd HH:mm")</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Payment Status:</span>
+                            <span class="badge @(Model.OrderHeader.PaymentStatus == "Approved" ? "bg-success" : "bg-warning text-dark")">
+                                @Model.OrderHeader.PaymentStatus
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Order Status:</span>
+                            <span class="badge @(Model.OrderHeader.OrderStatus == "Shipped" ? "bg-primary" : Model.OrderHeader.OrderStatus == "Cancelled" ? "bg-danger" : "bg-info text-dark")">
+                                @Model.OrderHeader.OrderStatus
+                            </span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.OrderHeader.SessionId))
+                        {
+                            <div class="d-flex justify-content-between py-1 border-bottom">
+                                <span class="text-muted">Stripe Session:</span>
+                                <small class="font-monospace text-truncate" style="max-width: 200px;">@Model.OrderHeader.SessionId</small>
+                            </div>
+                        }
+                    </div>
+
+                    <h6 class="fw-bold mb-2">Booked Services & Tool Packages:</h6>
+                    <ul class="list-group mb-4">
+                        @foreach (var detail in Model.OrderDetails)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="my-0 fw-bold">@detail.ServiceListing?.Title</h6>
+                                    <small class="text-muted">Qty: @detail.Count x $@detail.Price.ToString("F2")</small>
+                                </div>
+                                <span class="fw-bold">$@((detail.Count * detail.Price).ToString("F2"))</span>
+                            </li>
+                        }
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                            <strong class="fs-5">Order Total (NZD):</strong>
+                            <strong class="fs-4 text-success">$@Model.OrderHeader.OrderTotal.ToString("F2")</strong>
+                        </li>
+                    </ul>
+
+                    <!-- Management Action Workflow Buttons -->
+                    <div class="d-grid gap-2">
+                        @if (Model.OrderHeader.OrderStatus == CommUnityHub.Models.SD.StatusApproved)
+                        {
+                            <button type="submit" asp-action="StartProcessing" class="btn btn-info text-white">
+                                <i class="bi bi-gear-wide-connected me-1"></i>Start Processing Order
+                            </button>
+                        }
+                        @if (Model.OrderHeader.OrderStatus == CommUnityHub.Models.SD.StatusInProcess || Model.OrderHeader.OrderStatus == CommUnityHub.Models.SD.StatusApproved)
+                        {
+                            <button type="submit" asp-action="ShipOrder" class="btn btn-primary">
+                                <i class="bi bi-send-check me-1"></i>Ship / Dispatch Order & Assign Tracking
+                            </button>
+                        }
+                        @if (Model.OrderHeader.OrderStatus != CommUnityHub.Models.SD.StatusCancelled && Model.OrderHeader.OrderStatus != CommUnityHub.Models.SD.StatusRefunded)
+                        {
+                            <button type="submit" asp-action="CancelOrder" class="btn btn-outline-danger">
+                                <i class="bi bi-x-circle me-1"></i>Cancel Order & Refund
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

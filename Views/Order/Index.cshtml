@@ -1,0 +1,113 @@
+@model IEnumerable<CommUnityHub.Models.OrderHeader>
+
+@{
+    ViewData["Title"] = "Order & Shipment Management";
+    var currentStatus = ViewData["CurrentStatus"] as string ?? "all";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-dark text-white py-3">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Order & Shipment Management</h5>
+            </div>
+            <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <small class="text-light opacity-75">Track local service orders and deliveries</small>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <!-- Status Filter Tabs -->
+        <ul class="nav nav-pills mb-4 gap-2">
+            <li class="nav-item">
+                <a class="nav-link @(currentStatus == "all" ? "active" : "btn-outline-secondary")" asp-action="Index" asp-route-status="all">All Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(currentStatus == "pending" ? "active" : "btn-outline-secondary")" asp-action="Index" asp-route-status="pending">Payment Pending</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(currentStatus == "approved" ? "active" : "btn-outline-secondary")" asp-action="Index" asp-route-status="approved">Approved</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(currentStatus == "processing" ? "active" : "btn-outline-secondary")" asp-action="Index" asp-route-status="processing">Processing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(currentStatus == "shipped" ? "active" : "btn-outline-secondary")" asp-action="Index" asp-route-status="shipped">Shipped / Dispatched</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(currentStatus == "cancelled" ? "active" : "btn-outline-secondary")" asp-action="Index" asp-route-status="cancelled">Cancelled</a>
+            </li>
+        </ul>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-light text-center py-4 border">
+                <p class="text-muted mb-0">No orders found matching the filter criteria "@currentStatus".</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer Name</th>
+                            <th>Phone</th>
+                            <th>Order Date</th>
+                            <th>Order Status</th>
+                            <th>Carrier & Tracking</th>
+                            <th class="text-end">Total (NZD)</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold text-primary">#@order.Id</td>
+                                <td>@order.Name</td>
+                                <td><small>@order.PhoneNumber</small></td>
+                                <td><small>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</small></td>
+                                <td>
+                                    @{
+                                        var badgeClass = order.OrderStatus switch
+                                        {
+                                            "Approved" => "bg-success",
+                                            "Processing" => "bg-info text-dark",
+                                            "Shipped" => "bg-primary",
+                                            "Cancelled" => "bg-danger",
+                                            _ => "bg-warning text-dark"
+                                        };
+                                    }
+                                    <span class="badge @badgeClass">@order.OrderStatus</span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(order.TrackingNumber))
+                                    {
+                                        <div>
+                                            <span class="badge bg-light text-dark border">
+                                                <i class="bi bi-truck me-1"></i>@(order.Carrier ?? "Courier")
+                                            </span>
+                                        </div>
+                                        <small class="text-muted font-monospace">@order.TrackingNumber</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic small">Pending dispatch</span>
+                                    }
+                                </td>
+                                <td class="text-end fw-bold">$@order.OrderTotal.ToString("F2")</td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-orderId="@order.Id" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil-square me-1"></i>Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,102 @@
+@model CommUnityHub.Models.ViewModels.ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Order & Shipment Summary";
+}
+
+<form method="post" asp-action="Summary">
+    @Html.AntiForgeryToken()
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white py-3">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Order & Fulfillment Summary</h5>
+                </div>
+                <div class="col-6 text-end">
+                    <a asp-action="Index" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                <!-- Fulfillment / Contact Information -->
+                <div class="col-lg-7 pb-4">
+                    <h5 class="fw-bold mb-3 text-secondary border-bottom pb-2">
+                        <i class="bi bi-truck me-2"></i>Fulfillment & Contact Information
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label asp-for="OrderHeader.Name" class="form-label fw-bold"></label>
+                            <input asp-for="OrderHeader.Name" class="form-control" placeholder="Recipient or Contact Name" required />
+                            <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrderHeader.PhoneNumber" class="form-label fw-bold"></label>
+                            <input asp-for="OrderHeader.PhoneNumber" class="form-control" placeholder="e.g. 021-123-4567" required />
+                            <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrderHeader.City" class="form-label fw-bold"></label>
+                            <input asp-for="OrderHeader.City" class="form-control" placeholder="e.g. Lower Hutt / Wellington" required />
+                            <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="OrderHeader.StreetAddress" class="form-label fw-bold"></label>
+                            <input asp-for="OrderHeader.StreetAddress" class="form-control" placeholder="Street Address for service / tool delivery" required />
+                            <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrderHeader.Suburb" class="form-label fw-bold"></label>
+                            <input asp-for="OrderHeader.Suburb" class="form-control" placeholder="Suburb (e.g. Petone, Alicetown)" />
+                            <span asp-validation-for="OrderHeader.Suburb" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrderHeader.PostalCode" class="form-label fw-bold"></label>
+                            <input asp-for="OrderHeader.PostalCode" class="form-control" placeholder="Postal Code (e.g. 5012)" />
+                            <span asp-validation-for="OrderHeader.PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary Breakdown -->
+                <div class="col-lg-5">
+                    <div class="card bg-light border-0 p-3">
+                        <h5 class="fw-bold mb-3 text-secondary border-bottom pb-2">
+                            <i class="bi bi-receipt me-2"></i>Order Items
+                        </h5>
+                        <ul class="list-group list-group-flush mb-3">
+                            @foreach (var detail in Model.ShoppingCartList)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 py-2">
+                                    <div>
+                                        <h6 class="my-0 fw-bold">@detail.ServiceListing?.Title</h6>
+                                        <small class="text-muted">Qty: @detail.Count x $@detail.Price.ToString("F2")</small>
+                                    </div>
+                                    <span class="text-dark fw-bold">$@((detail.Count * detail.Price).ToString("F2"))</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 py-3 border-top">
+                                <span class="fw-bold fs-5">Total (NZD)</span>
+                                <strong class="fs-4 text-primary">$@Model.OrderHeader.OrderTotal.ToString("F2")</strong>
+                            </li>
+                        </ul>
+
+                        <div class="alert alert-info py-2 small mb-3">
+                            <i class="bi bi-shield-lock-fill me-1"></i> Secure payment powered by <strong>Stripe</strong>.
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-stripe me-2"></i>Place Order & Pay with Stripe
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

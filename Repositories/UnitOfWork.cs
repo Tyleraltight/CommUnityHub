@@ -8,6 +8,10 @@ namespace CommUnityHub.Repositories
         private readonly ApplicationDbContext _context;
         private IRepository<ServiceCategory>? _categories;
         private IServiceListingRepository? _serviceListings;
+        private IRepository<ShoppingCart>? _shoppingCarts;
+        private IOrderHeaderRepository? _orderHeaders;
+        private IRepository<OrderDetail>? _orderDetails;
+        private IRepository<ApplicationUser>? _applicationUsers;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -18,10 +22,7 @@ namespace CommUnityHub.Repositories
         {
             get
             {
-                if (_categories == null)
-                {
-                    _categories = new Repository<ServiceCategory>(_context);
-                }
+                _categories ??= new Repository<ServiceCategory>(_context);
                 return _categories;
             }
         }
@@ -30,11 +31,44 @@ namespace CommUnityHub.Repositories
         {
             get
             {
-                if (_serviceListings == null)
-                {
-                    _serviceListings = new ServiceListingRepository(_context);
-                }
+                _serviceListings ??= new ServiceListingRepository(_context);
                 return _serviceListings;
+            }
+        }
+
+        public IRepository<ShoppingCart> ShoppingCarts
+        {
+            get
+            {
+                _shoppingCarts ??= new Repository<ShoppingCart>(_context);
+                return _shoppingCarts;
+            }
+        }
+
+        public IOrderHeaderRepository OrderHeaders
+        {
+            get
+            {
+                _orderHeaders ??= new OrderHeaderRepository(_context);
+                return _orderHeaders;
+            }
+        }
+
+        public IRepository<OrderDetail> OrderDetails
+        {
+            get
+            {
+                _orderDetails ??= new Repository<OrderDetail>(_context);
+                return _orderDetails;
+            }
+        }
+
+        public IRepository<ApplicationUser> ApplicationUsers
+        {
+            get
+            {
+                _applicationUsers ??= new Repository<ApplicationUser>(_context);
+                return _applicationUsers;
             }
         }
 

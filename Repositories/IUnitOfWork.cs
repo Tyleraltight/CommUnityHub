@@ -6,6 +6,10 @@ namespace CommUnityHub.Repositories
     {
         IRepository<ServiceCategory> Categories { get; }
         IServiceListingRepository ServiceListings { get; }
+        IRepository<ShoppingCart> ShoppingCarts { get; }
+        IOrderHeaderRepository OrderHeaders { get; }
+        IRepository<OrderDetail> OrderDetails { get; }
+        IRepository<ApplicationUser> ApplicationUsers { get; }
         Task<int> CompleteAsync();
     }
 }
