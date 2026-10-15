@@ -1,0 +1,79 @@
+@model CommUnityHub.Models.ViewModels.LoginVM
+
+@{
+    ViewData["Title"] = "Account Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 mt-3 mb-4">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0 text-center">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In to CommUnity Hub
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" id="emailInput" placeholder="name@example.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Password" class="form-control" id="passwordInput" placeholder="Enter password" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label text-muted">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                        <i class="bi bi-check2-circle me-1"></i>Sign In
+                    </button>
+                </form>
+
+                <hr class="my-4" />
+
+                <!-- Demo Accounts -->
+                <div class="card bg-light border-0">
+                    <div class="card-body p-3">
+                        <h6 class="fw-bold mb-2 text-dark">
+                            <i class="bi bi-person-badge text-primary me-1"></i>Demo Accounts
+                        </h6>
+                        <small class="text-muted d-block mb-3">Quick fill test credentials:</small>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-secondary btn-sm text-start" onclick="quickFill('admin@communityhub.nz', 'Admin123!')">
+                                <span class="badge bg-dark me-2">Admin</span> admin@communityhub.nz
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm text-start" onclick="quickFill('resident@communityhub.nz', 'Resident123!')">
+                                <span class="badge bg-info text-dark me-2">Resident</span> resident@communityhub.nz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function quickFill(email, password) {
+            document.getElementById('emailInput').value = email;
+            document.getElementById('passwordInput').value = password;
+        }
+    </script>
+}
