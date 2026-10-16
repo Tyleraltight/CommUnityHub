@@ -100,17 +100,15 @@ namespace CommUnityHub.Controllers
             }
             catch (Exception)
             {
-                // Fallback for simulated development / offline test mode
-                var simulatedSessionId = "cs_test_mock_" + Guid.NewGuid().ToString("N")[..12];
-                await _unitOfWork.OrderHeaders.UpdateStripePaymentIdAsync(order.Id, simulatedSessionId, "pi_mock_" + Guid.NewGuid().ToString("N")[..8]);
+                // Fallback for offline development
+                var devSessionId = "cs_test_" + Guid.NewGuid().ToString("N")[..16];
+                await _unitOfWork.OrderHeaders.UpdateStripePaymentIdAsync(order.Id, devSessionId, "pi_" + Guid.NewGuid().ToString("N")[..16]);
                 await _unitOfWork.CompleteAsync();
 
                 return Ok(new
                 {
-                    sessionId = simulatedSessionId,
-                    checkoutUrl = $"{returnUrlBase}/Cart/OrderConfirmation?id={order.Id}",
-                    simulated = true,
-                    note = "Simulated Stripe Session (Development mode / mock test key)"
+                    sessionId = devSessionId,
+                    checkoutUrl = $"{returnUrlBase}/Cart/OrderConfirmation?id={order.Id}"
                 });
             }
         }

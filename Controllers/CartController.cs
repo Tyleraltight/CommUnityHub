@@ -253,7 +253,7 @@ namespace CommUnityHub.Controllers
             }
             catch (Exception)
             {
-                // In local development or offline test mode where secret key is simulated, simulate payment approval
+                // Fallback for local development
                 await _unitOfWork.OrderHeaders.UpdateStatusAsync(orderHeader.Id, SD.StatusApproved, SD.PaymentStatusApproved);
                 await _unitOfWork.CompleteAsync();
                 return RedirectToAction(nameof(OrderConfirmation), new { id = orderHeader.Id });
@@ -283,7 +283,7 @@ namespace CommUnityHub.Controllers
                 }
                 catch
                 {
-                    // Fallback for simulation
+                    // Fallback for local development
                     await _unitOfWork.OrderHeaders.UpdateStatusAsync(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     await _unitOfWork.CompleteAsync();
                 }

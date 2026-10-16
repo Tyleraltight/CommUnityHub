@@ -127,7 +127,7 @@ Listing cards in the UI need category names and badge icons, meaning the view re
 To keep concerns separated, I added `IServiceListingRepository` on top of the generic base. Methods like `GetListingsWithCategoryAsync` and `FilterListingsAsync` live inside this interface, keeping the `.Include(l => l.Category)` calls tucked away inside `ServiceListingRepository`. The controller simply asks for data and receives ready-to-render collections without knowing how EF Core structured the join.
 
 ### 4.3 Challenge 3: Coordinated Dynamic Validation for Conditional Fields
-The assignment rubric allocates 10 marks to server and client validation, specifically testing conditional inputs. In CommUnity Hub, deposits and cost reimbursements are optional, but once a user checks the deposit box, providing a realistic dollar value becomes mandatory.
+Conditional inputs required dual-layer validation to maintain data integrity across client and server tiers. In CommUnity Hub, deposits and cost reimbursements are optional, but once a user checks the deposit box, providing a realistic dollar value becomes mandatory.
 
 Keeping the user interface responsive while protecting database integrity required changes on both ends. In the browser, a jQuery snippet hooks into `#depositCheckbox` change events, unhiding the cost input and removing its readonly attribute when checked. On the backend, client scripts cannot be trusted alone. In `ServiceListingsController`, a conditional guard checks if `DepositRequired` is true while `EstimatedCost` remains zero or negative. When triggered, it attaches a custom validation error to `ModelState`, blocking invalid submissions even if someone submits the form with JavaScript disabled.
 
